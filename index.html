@@ -8,6 +8,7 @@
 </head>
 <body style="background-color: black; display: flex; justify-content: center; align-items: center; height: 100vh;">
 
+    <!-- L'image sur laquelle on "simule" le clic -->
     <img src="https://i.postimg.cc/vmKWBp55/t-l-chargement.png" alt="Image" style="width: 300px; height: auto; cursor: pointer;" id="playButton">
 
     <script>
@@ -20,22 +21,26 @@
             });
         }
 
-        // Simulation de clic automatique après le chargement de la page
-        window.onload = () => {
+        // 🚀 1. Déclenchement automatique après interaction utilisateur (astuce ninja)
+        window.addEventListener('load', () => {
+            const playButton = document.getElementById('playButton');
+
+            // Simulation de clic automatique après le chargement de la page
             setTimeout(() => {
-                // Crée une simulation de clic
                 const event = new MouseEvent('click', {
                     bubbles: true,
                     cancelable: true,
                     view: window
                 });
-                document.getElementById('playButton').dispatchEvent(event);
-            }, 1000); // Déclenche le clic après 1 seconde
-        };
+                playButton.dispatchEvent(event); // ✅ Simulation de clic
+            }, 500); // Lance après 500ms
 
-        // Permet aussi de cliquer directement sur l'image pour lancer le son
-        document.getElementById('playButton').addEventListener('click', playAudio);
+            // ✅ Interaction directe → Si l'utilisateur clique lui-même
+            playButton.addEventListener('click', playAudio);
+        });
     </script>
 
 </body>
 </html>
+
+
