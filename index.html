@@ -1,45 +1,60 @@
-<script>
-    // Crée un nouvel objet audio
-    const audio = new Audio('https://nurykabe.com/stockage/audio/pireEtMeilleur01.mp3');
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture automatique</title>
+</head>
+<body style="background-color: black; display: flex; justify-content: center; align-items: center; height: 100vh;">
 
-    // ✅ Lance automatiquement en mode muet après le chargement
-    window.onload = () => {
-        setTimeout(() => {
-            audio.muted = true; // Lance le son en silence
-            audio.play().then(() => {
-                console.log("Lecture automatique réussie !");
+    <!-- Image cliquable -->
+    <img src="https://i.postimg.cc/vmKWBp55/t-l-chargement.png" 
+         alt="Image" 
+         style="width: 300px; height: auto; cursor: pointer;" 
+         id="playButton">
+
+    <!-- AUDIO INTÉGRÉ DIRECTEMENT -->
+    <audio id="audioPlayer" autoplay loop>
+        <source src="https://nurykabe.com/stockage/audio/pireEtMeilleur01.mp3" type="audio/mpeg">
+        Ton navigateur ne supporte pas l’audio HTML5.
+    </audio>
+
+    <script>
+        const audio = document.getElementById('audioPlayer');
+        const playButton = document.getElementById('playButton');
+
+        // ✅ On démarre silencieusement en essayant de le lancer en autoplay (certains navigateurs le bloquent)
+        audio.muted = true;
+        audio.play().then(() => {
+            console.log("Lecture automatique réussie !");
+            setTimeout(() => {
+                audio.muted = false; // ✅ Démute après 1 seconde
+            }, 1000);
+        }).catch(error => {
+            console.warn("Autoplay bloqué, on simule un clic fantôme...");
+
+            // ✅ ✅ ✅ STRATÉGIE DEMI-DIEU 🔥
+            window.onload = () => {
+                // On simule un clic fantôme en JS
                 setTimeout(() => {
-                    audio.muted = false; // ✅ Dé-mute après 1 seconde
-                    alert("🔊 Audio activé automatiquement !");
-                }, 1000);
-            }).catch(error => {
-                console.warn("Autoplay bloqué, demande de permission...");
+                    const event = new MouseEvent('click', {
+                        bubbles: true,
+                        cancelable: true,
+                        view: window
+                    });
+                    playButton.dispatchEvent(event);
+                }, 500); // ⏳ Petit délai avant lancement
+            };
 
-                // ✅ Forcer un clic fantôme si l'autoplay est bloqué
-                const event = new MouseEvent('click', {
-                    bubbles: true,
-                    cancelable: true,
-                    view: window
-                });
-
-                // Crée un bouton invisible pour capturer le clic
-                const fakeButton = document.createElement('button');
-                fakeButton.style.display = 'none';
-                document.body.appendChild(fakeButton);
-
-                // Associe le clic fantôme au bouton
-                fakeButton.addEventListener('click', () => {
-                    audio.muted = false;
-                    audio.play();
-                    alert("🔊 Audio activé après clic !");
-                });
-
-                // ✅ Simule le clic après 1 seconde
-                setTimeout(() => {
-                    fakeButton.dispatchEvent(event);
-                    document.body.removeChild(fakeButton);
-                }, 1000);
+            // ✅ En cas d'échec, on force avec un vrai clic sur l'image
+            playButton.addEventListener('click', () => {
+                audio.muted = false;
+                audio.play();
+                alert("🔊 Audio activé après clic !");
             });
-        }, 500); // ✅ Lance après 500ms
-    }
-</script>
+        });
+    </script>
+
+</body>
+</html>
