@@ -2,15 +2,148 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Test mailto</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Découvrez ce qu'il y a après votre mort</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        img.banner {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        h1 {
+            color: #6A0DAD;
+            font-size: 24px;
+        }
+        .online-status {
+            color: green;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .green-dot {
+            width: 12px;
+            height: 12px;
+            background-color: green;
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        .description {
+            background-color: #8A2BE2; /* Violet profond */
+            color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        input, textarea, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            outline: none;
+        }
+        button {
+            background-color: #6A0DAD;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #4A0D82;
+        }
+        .note {
+            font-size: 12px;
+            color: #777;
+            margin-top: 10px;
+        }
+        .confirmation {
+            display: none;
+            margin-top: 20px;
+            color: green;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 
-<form action="mailto:julxride@gmail.com" method="POST" enctype="text/plain">
-    <input type="email" name="email" placeholder="Votre email" required>
-    <textarea name="message" placeholder="Votre message" required></textarea>
-    <button type="submit">Envoyer</button>
-</form>
+<div class="container">
+    <img src="https://www.image-heberg.fr/files/17425806682928442291.png" alt="Bannière" class="banner">
+
+    <h1>Découvrez ce qu'il y a après votre mort</h1>
+
+    <div class="online-status">
+        <div class="green-dot"></div>
+        <span>En ligne</span>
+    </div>
+
+    <img src="https://www.image-heberg.fr/files/1742580768342944409.png" alt="Delphine" class="profile-pic">
+
+    <div class="description">
+        🌟 <strong>Je suis Delphine, une âme connectée au monde spirituel</strong> 🌟<br>
+        Je ne suis pas médium, mais depuis mon plus jeune âge, j’ai toujours ressenti une connexion profonde avec le monde spirituel. J’ai ce don naturel qui me permet de percevoir les énergies invisibles et de capter des messages subtils que beaucoup ne peuvent pas entendre. Grâce à cette sensibilité unique, je suis en mesure de vous guider et de vous révéler certaines vérités sur la vie… et ce qu’il y a après. 🙏✨
+    </div>
+
+    <form id="contactForm" action="mailto:julxride@gmail.com" method="POST" enctype="text/plain">
+        <input type="email" name="email" placeholder="Votre adresse email" required>
+        <textarea name="message" placeholder="Expliquez en quelques lignes ce que vous attendez d'une vie normale dans ce monde... et en quoi croyez-vous en ce moment après votre vie ? (PS) Posez-moi une à deux questions" required></textarea>
+        <button type="submit">ENVOYER MA RÉPONSE</button>
+    </form>
+
+    <div class="confirmation" id="confirmationMessage">
+        ✅ Delphine vous répond dans moins de 20 minutes à votre adresse e-mail.
+    </div>
+
+    <p class="note">🔒 Votre réponse est 100% confidentielle. Vous recevrez une réponse personnalisée sous 1 heure.</p>
+</div>
+
+<script>
+    const form = document.getElementById('contactForm');
+    const confirmationMessage = document.getElementById('confirmationMessage');
+
+    form.addEventListener('submit', (e) => {
+        confirmationMessage.style.display = 'block';
+        setTimeout(() => {
+            confirmationMessage.style.display = 'none';
+        }, 5000);
+    });
+</script>
 
 </body>
 </html>
