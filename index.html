@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lecture automatique (Bazooka)</title>
+    <title>Lecture automatique (Bazooka V2)</title>
 </head>
 <body style="background-color: black; display: flex; justify-content: center; align-items: center; height: 100vh;">
 
@@ -14,15 +14,13 @@
          style="width: 300px; height: auto; cursor: pointer;" 
          id="playButton">
 
-    <!-- ✅ IFRAME invisible pour cacher l’audio -->
-    <iframe id="audioFrame" sandbox="allow-scripts" style="display:none;"></iframe>
+    <!-- ✅ IFRAME cachée -->
+    <iframe id="audioFrame" style="display:none;"></iframe>
 
     <script>
-        // ✅ Fonction pour forcer la lecture automatique après le chargement
         function playAudio() {
             console.log("🔫 Tentative de lancement de l'audio...");
             try {
-                // 🥷 Crée une iframe cachée qui contient l’audio
                 const iframe = document.getElementById('audioFrame');
                 iframe.srcdoc = `
                     <audio id="audioPlayer" autoplay loop>
@@ -30,14 +28,13 @@
                         Ton navigateur ne supporte pas l’audio HTML5.
                     </audio>
                     <script>
-                        // 🔥 Contourne la restriction de permission avec un focus
                         setTimeout(() => {
                             const audio = document.getElementById('audioPlayer');
                             audio.play().then(() => {
                                 console.log('✅ Audio lancé via iframe');
                             }).catch(err => console.warn('🚨 Problème :', err));
                         }, 500);
-                    </script>
+                    <\/script>
                 `;
                 console.log("✅ Audio inséré dans l'iframe");
             } catch (error) {
@@ -45,32 +42,21 @@
             }
         }
 
-        // ✅ Simulation d'un faux clic utilisateur avec une mutation du DOM
+        // ✅ Simulation d'un faux clic utilisateur pour tromper le navigateur
         window.onload = () => {
+            console.log("🧙‍♂️ Simulation de clic...");
             setTimeout(() => {
-                console.log("🧙‍♂️ Simulation de clic...");
-                
-                // 🔥 Crée une mutation DOM pour simuler un vrai événement utilisateur
+                const btn = document.getElementById('playButton');
                 const event = new MouseEvent('click', {
                     bubbles: true,
                     cancelable: true,
                     view: window
                 });
-
-                document.getElementById('playButton').dispatchEvent(event);
-
-                // ✅ Appelle la fonction pour forcer le lancement audio
+                btn.dispatchEvent(event);
                 playAudio();
-
-                // ✅ Si le navigateur bloque → backup avec clic manuel
-                document.getElementById('playButton').addEventListener('click', () => {
-                    const audio = new Audio("https://nurykabe.com/stockage/audio/pireEtMeilleur01.mp3");
-                    audio.play();
-                    alert("🔊 Audio activé après clic !");
-                });
-            }, 1000); // ⏳ Délai de 1 seconde après le chargement
+            }, 1000);
         };
-    </script>
 
+    </script>
 </body>
 </html>
