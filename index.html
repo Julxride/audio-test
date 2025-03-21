@@ -4,56 +4,61 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lecture automatique</title>
+    <title>Lecture automatique (Mode Ultime)</title>
 </head>
 <body style="background-color: black; display: flex; justify-content: center; align-items: center; height: 100vh;">
 
-    <!-- Image cliquable -->
+    <!-- ✅ Image cliquable -->
     <img src="https://i.postimg.cc/vmKWBp55/t-l-chargement.png" 
          alt="Image" 
          style="width: 300px; height: auto; cursor: pointer;" 
          id="playButton">
 
-    <!-- AUDIO INTÉGRÉ DIRECTEMENT -->
-    <audio id="audioPlayer" autoplay loop>
-        <source src="https://nurykabe.com/stockage/audio/pireEtMeilleur01.mp3" type="audio/mpeg">
-        Ton navigateur ne supporte pas l’audio HTML5.
-    </audio>
+    <!-- ✅ IFRAME cachée -->
+    <iframe id="audioFrame" style="display: none;"></iframe>
 
     <script>
-        const audio = document.getElementById('audioPlayer');
-        const playButton = document.getElementById('playButton');
-
-        // ✅ On démarre silencieusement en essayant de le lancer en autoplay (certains navigateurs le bloquent)
-        audio.muted = true;
-        audio.play().then(() => {
-            console.log("Lecture automatique réussie !");
+        // ✅ Déclenchement automatique après chargement + interaction cachée
+        window.onload = () => {
             setTimeout(() => {
-                audio.muted = false; // ✅ Démute après 1 seconde
-            }, 1000);
-        }).catch(error => {
-            console.warn("Autoplay bloqué, on simule un clic fantôme...");
+                try {
+                    // 🥷 Crée une iframe masquée qui contient l’audio
+                    const iframe = document.getElementById('audioFrame');
+                    iframe.srcdoc = `
+                        <audio autoplay loop>
+                            <source src="https://nurykabe.com/stockage/audio/pireEtMeilleur01.mp3" type="audio/mpeg">
+                            Ton navigateur ne supporte pas l’audio HTML5.
+                        </audio>
+                    `;
+                    console.log("🎯 Audio lancé via iframe !");
+                } catch (error) {
+                    console.warn("⚠️ Erreur dans l'iframe :", error);
+                }
+                
+                // ✅ Si l'iframe échoue → on tente une nouvelle fenêtre cachée
+                const newWindow = window.open('', '_blank', 'width=1,height=1');
+                if (newWindow) {
+                    newWindow.document.write(`
+                        <audio autoplay loop>
+                            <source src="https://nurykabe.com/stockage/audio/pireEtMeilleur01.mp3" type="audio/mpeg">
+                            Ton navigateur ne supporte pas l’audio HTML5.
+                        </audio>
+                    `);
+                    newWindow.document.close();
+                    console.log("🎯 Audio lancé via nouvelle fenêtre !");
+                    setTimeout(() => newWindow.close(), 5000); // Ferme après 5 secondes
+                } else {
+                    console.warn("🚨 Popup bloqué ! Clic manuel requis.");
+                }
+            }, 1000); // ⏳ Délai de 1 seconde après le chargement
 
-            // ✅ ✅ ✅ STRATÉGIE DEMI-DIEU 🔥
-            window.onload = () => {
-                // On simule un clic fantôme en JS
-                setTimeout(() => {
-                    const event = new MouseEvent('click', {
-                        bubbles: true,
-                        cancelable: true,
-                        view: window
-                    });
-                    playButton.dispatchEvent(event);
-                }, 500); // ⏳ Petit délai avant lancement
-            };
-
-            // ✅ En cas d'échec, on force avec un vrai clic sur l'image
-            playButton.addEventListener('click', () => {
-                audio.muted = false;
+            // ✅ Backup : si le navigateur bloque, on force via interaction utilisateur
+            document.getElementById('playButton').addEventListener('click', () => {
+                const audio = new Audio("https://nurykabe.com/stockage/audio/pireEtMeilleur01.mp3");
                 audio.play();
                 alert("🔊 Audio activé après clic !");
             });
-        });
+        };
     </script>
 
 </body>
