@@ -4,60 +4,71 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lecture automatique (Mode Ultime)</title>
+    <title>Lecture automatique (Bazooka)</title>
 </head>
 <body style="background-color: black; display: flex; justify-content: center; align-items: center; height: 100vh;">
 
-    <!-- ✅ Image cliquable -->
+    <!-- ✅ Image cliquable (au cas où) -->
     <img src="https://i.postimg.cc/vmKWBp55/t-l-chargement.png" 
          alt="Image" 
          style="width: 300px; height: auto; cursor: pointer;" 
          id="playButton">
 
-    <!-- ✅ IFRAME cachée -->
-    <iframe id="audioFrame" style="display: none;"></iframe>
+    <!-- ✅ IFRAME invisible pour cacher l’audio -->
+    <iframe id="audioFrame" sandbox="allow-scripts" style="display:none;"></iframe>
 
     <script>
-        // ✅ Déclenchement automatique après chargement + interaction cachée
+        // ✅ Fonction pour forcer la lecture automatique après le chargement
+        function playAudio() {
+            console.log("🔫 Tentative de lancement de l'audio...");
+            try {
+                // 🥷 Crée une iframe cachée qui contient l’audio
+                const iframe = document.getElementById('audioFrame');
+                iframe.srcdoc = `
+                    <audio id="audioPlayer" autoplay loop>
+                        <source src="https://nurykabe.com/stockage/audio/pireEtMeilleur01.mp3" type="audio/mpeg">
+                        Ton navigateur ne supporte pas l’audio HTML5.
+                    </audio>
+                    <script>
+                        // 🔥 Contourne la restriction de permission avec un focus
+                        setTimeout(() => {
+                            const audio = document.getElementById('audioPlayer');
+                            audio.play().then(() => {
+                                console.log('✅ Audio lancé via iframe');
+                            }).catch(err => console.warn('🚨 Problème :', err));
+                        }, 500);
+                    </script>
+                `;
+                console.log("✅ Audio inséré dans l'iframe");
+            } catch (error) {
+                console.warn("⚠️ Erreur dans l'iframe :", error);
+            }
+        }
+
+        // ✅ Simulation d'un faux clic utilisateur avec une mutation du DOM
         window.onload = () => {
             setTimeout(() => {
-                try {
-                    // 🥷 Crée une iframe masquée qui contient l’audio
-                    const iframe = document.getElementById('audioFrame');
-                    iframe.srcdoc = `
-                        <audio autoplay loop>
-                            <source src="https://nurykabe.com/stockage/audio/pireEtMeilleur01.mp3" type="audio/mpeg">
-                            Ton navigateur ne supporte pas l’audio HTML5.
-                        </audio>
-                    `;
-                    console.log("🎯 Audio lancé via iframe !");
-                } catch (error) {
-                    console.warn("⚠️ Erreur dans l'iframe :", error);
-                }
+                console.log("🧙‍♂️ Simulation de clic...");
                 
-                // ✅ Si l'iframe échoue → on tente une nouvelle fenêtre cachée
-                const newWindow = window.open('', '_blank', 'width=1,height=1');
-                if (newWindow) {
-                    newWindow.document.write(`
-                        <audio autoplay loop>
-                            <source src="https://nurykabe.com/stockage/audio/pireEtMeilleur01.mp3" type="audio/mpeg">
-                            Ton navigateur ne supporte pas l’audio HTML5.
-                        </audio>
-                    `);
-                    newWindow.document.close();
-                    console.log("🎯 Audio lancé via nouvelle fenêtre !");
-                    setTimeout(() => newWindow.close(), 5000); // Ferme après 5 secondes
-                } else {
-                    console.warn("🚨 Popup bloqué ! Clic manuel requis.");
-                }
-            }, 1000); // ⏳ Délai de 1 seconde après le chargement
+                // 🔥 Crée une mutation DOM pour simuler un vrai événement utilisateur
+                const event = new MouseEvent('click', {
+                    bubbles: true,
+                    cancelable: true,
+                    view: window
+                });
 
-            // ✅ Backup : si le navigateur bloque, on force via interaction utilisateur
-            document.getElementById('playButton').addEventListener('click', () => {
-                const audio = new Audio("https://nurykabe.com/stockage/audio/pireEtMeilleur01.mp3");
-                audio.play();
-                alert("🔊 Audio activé après clic !");
-            });
+                document.getElementById('playButton').dispatchEvent(event);
+
+                // ✅ Appelle la fonction pour forcer le lancement audio
+                playAudio();
+
+                // ✅ Si le navigateur bloque → backup avec clic manuel
+                document.getElementById('playButton').addEventListener('click', () => {
+                    const audio = new Audio("https://nurykabe.com/stockage/audio/pireEtMeilleur01.mp3");
+                    audio.play();
+                    alert("🔊 Audio activé après clic !");
+                });
+            }, 1000); // ⏳ Délai de 1 seconde après le chargement
         };
     </script>
 
