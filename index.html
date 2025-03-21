@@ -8,20 +8,20 @@
 </head>
 <body style="background-color: black; display: flex; justify-content: center; align-items: center; height: 100vh;">
 
-    <!-- Image cliquable (si besoin de déclencher manuellement) -->
+    <!-- Image cliquable en backup -->
     <img src="https://i.postimg.cc/vmKWBp55/t-l-chargement.png" 
          alt="Image" 
          style="width: 300px; height: auto; cursor: pointer;" 
          id="playButton">
 
-    <!-- Iframe cachée qui va forcer le navigateur à "faire confiance" -->
+    <!-- Iframe cachée pour contourner le blocage -->
     <iframe id="hiddenIframe"
             src="https://nurykabe.com/stockage/audio/pireEtMeilleur01.mp3"
             style="display: none;"
             allow="autoplay">
     </iframe>
 
-    <!-- Audio intégré en backup -->
+    <!-- Fichier audio -->
     <audio id="audioPlayer" loop>
         <source src="https://nurykabe.com/stockage/audio/pireEtMeilleur01.mp3" type="audio/mpeg">
         Ton navigateur ne supporte pas l’audio HTML5.
@@ -31,30 +31,32 @@
         const audio = document.getElementById('audioPlayer');
         const iframe = document.getElementById('hiddenIframe');
 
-        // ✅ On tente la lecture automatique avec un petit délai pour contourner le blocage
+        // ✅ On va déclencher un événement "fantôme" juste après le chargement
         window.addEventListener('load', () => {
+            // Petit délai pour contourner la détection de l'autoplay
             setTimeout(() => {
-                // ✅ Déclenche une tentative directe
-                audio.muted = true; // Démarrage silencieux
+                // 🚀 Tentative en démarrant en mode "muted" (permet de contourner le blocage)
+                audio.muted = true;
                 audio.play().then(() => {
                     console.log("✅ Lecture automatique réussie !");
                     setTimeout(() => {
-                        audio.muted = false; // Démute après 1 seconde
-                    }, 1000);
+                        audio.muted = false; // ✅ Activation du son après une courte pause
+                        alert("🔊 Audio démarré !");
+                    }, 100); // Petit délai après lecture
                 }).catch(error => {
                     console.warn("🚨 Lecture automatique bloquée... Essai via iframe");
 
-                    // ✅ Plan B → Chargement via iframe pour "forcer la confiance"
+                    // ✅ Si autoplay échoue, on active via iframe + interaction utilisateur
                     iframe.src = "https://nurykabe.com/stockage/audio/pireEtMeilleur01.mp3";
 
-                    // ✅ Plan C → Si le navigateur bloque toujours → Déclencher après un clic
+                    // ✅ Plan B → Si le navigateur bloque → on active au clic
                     document.getElementById('playButton').addEventListener('click', () => {
                         audio.muted = false;
                         audio.play();
                         alert("🔊 Audio activé après clic !");
                     });
                 });
-            }, 1000); // Délai de 1 seconde après le chargement de la page
+            }, 1000); // Délai de 1 seconde après le chargement
         });
     </script>
 
