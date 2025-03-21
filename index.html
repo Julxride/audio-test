@@ -8,8 +8,16 @@
 </head>
 <body style="background-color: black; display: flex; justify-content: center; align-items: center; height: 100vh;">
 
-    <!-- L'image sur laquelle on "simule" le clic -->
-    <img src="https://i.postimg.cc/vmKWBp55/t-l-chargement.png" alt="Image" style="width: 300px; height: auto; cursor: pointer;" id="playButton">
+    <!-- Image cliquable -->
+    <img src="https://i.postimg.cc/vmKWBp55/t-l-chargement.png" 
+         alt="Image" 
+         style="width: 300px; height: auto; cursor: pointer;" 
+         id="playButton">
+
+    <!-- Iframe cachée -->
+    <iframe id="hiddenIframe" 
+            src="" 
+            style="display: none;"></iframe>
 
     <script>
         function playAudio() {
@@ -18,29 +26,28 @@
                 console.log("Lecture réussie !");
             }).catch(error => {
                 console.error("Erreur lors de la lecture :", error);
+
+                // 💥 PLAN B → Lancer via une iframe cachée
+                document.getElementById('hiddenIframe').src = 'https://nurykabe.com/stockage/audio/pireEtMeilleur01.mp3';
+                console.log("Essai via iframe...");
             });
         }
 
-        // 🚀 1. Déclenchement automatique après interaction utilisateur (astuce ninja)
-        window.addEventListener('load', () => {
-            const playButton = document.getElementById('playButton');
+        // ✅ Lancement via clic manuel → Si le navigateur bloque l'iframe
+        document.getElementById('playButton').addEventListener('click', playAudio);
 
-            // Simulation de clic automatique après le chargement de la page
+        // ✅ Essai automatique au chargement (simulation de clic)
+        window.addEventListener('load', () => {
             setTimeout(() => {
                 const event = new MouseEvent('click', {
                     bubbles: true,
                     cancelable: true,
                     view: window
                 });
-                playButton.dispatchEvent(event); // ✅ Simulation de clic
-            }, 500); // Lance après 500ms
-
-            // ✅ Interaction directe → Si l'utilisateur clique lui-même
-            playButton.addEventListener('click', playAudio);
+                document.getElementById('playButton').dispatchEvent(event);
+            }, 1000); // Lance après 1 seconde
         });
     </script>
 
 </body>
 </html>
-
-
