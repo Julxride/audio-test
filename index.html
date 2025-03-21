@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lecture automatique</title>
 </head>
-<body onload="playAudio()" style="background-color: black; display: flex; justify-content: center; align-items: center; height: 100vh;">
+<body style="background-color: black; display: flex; justify-content: center; align-items: center; height: 100vh;">
 
-    <img src="https://i.postimg.cc/vmKWBp55/t-l-chargement.png" alt="Image" style="max-width: 500px; border-radius: 10px;">
+    <img src="https://i.postimg.cc/vmKWBp55/t-l-chargement.png" alt="Image" style="width: 300px; height: auto; cursor: pointer;" id="playButton">
 
     <script>
         function playAudio() {
@@ -16,9 +16,26 @@
             audio.play().then(() => {
                 console.log("Lecture réussie !");
             }).catch(error => {
-                console.error("Erreur de lecture :", error);
+                console.error("Erreur lors de la lecture :", error);
             });
         }
+
+        // Simulation de clic automatique après le chargement de la page
+        window.onload = () => {
+            setTimeout(() => {
+                // Crée une simulation de clic
+                const event = new MouseEvent('click', {
+                    bubbles: true,
+                    cancelable: true,
+                    view: window
+                });
+                document.getElementById('playButton').dispatchEvent(event);
+            }, 1000); // Déclenche le clic après 1 seconde
+        };
+
+        // Permet aussi de cliquer directement sur l'image pour lancer le son
+        document.getElementById('playButton').addEventListener('click', playAudio);
     </script>
+
 </body>
 </html>
